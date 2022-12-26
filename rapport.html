@@ -192,39 +192,95 @@
 <li><a href="#introduction" id="toc-introduction">Introduction</a></li>
 <li><a href="#modélisation" id="toc-modélisation">Modélisation</a>
 <ul>
-<li><a href="#aérodynamique"
-id="toc-aérodynamique">Aérodynamique</a></li>
-<li><a href="#thermique" id="toc-thermique">Thermique</a></li>
+<li><a href="#aérodynamique" id="toc-aérodynamique">Aérodynamique</a>
+<ul>
+<li><a href="#champ-de-vitesse" id="toc-champ-de-vitesse">Champ de
+vitesse</a></li>
+<li><a href="#conditions-aux-limites"
+id="toc-conditions-aux-limites">Conditions aux limites:</a></li>
 </ul></li>
+<li><a href="#thermique" id="toc-thermique">Thermique</a>
+<ul>
+<li><a href="#champ-de-température" id="toc-champ-de-température">Champ
+de température</a></li>
+<li><a href="#conditions-aux-limites-1"
+id="toc-conditions-aux-limites-1">Conditions aux limites :</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#resolution-numérique"
+id="toc-resolution-numérique">Resolution numérique</a></li>
+<li><a href="#optimisation" id="toc-optimisation">Optimisation</a>
+<ul>
+<li><a href="#algorithme-de-descente-du-gradient"
+id="toc-algorithme-de-descente-du-gradient">Algorithme de descente du
+gradient</a></li>
+<li><a href="#approche-par-différences-finies"
+id="toc-approche-par-différences-finies">Approche par différences
+finies</a></li>
+<li><a href="#méthode-de-léquation-de-sensibilité"
+id="toc-méthode-de-léquation-de-sensibilité">Méthode de l’équation de
+sensibilité</a></li>
+<li><a href="#méthode-de-léquation-adjointe"
+id="toc-méthode-de-léquation-adjointe">Méthode de l’équation
+adjointe</a></li>
+</ul></li>
+<li><a href="#résultats" id="toc-résultats">Résultats</a>
+<ul>
+<li><a href="#calculs-des-gradients"
+id="toc-calculs-des-gradients">Calculs des gradients</a></li>
+<li><a href="#résultats-de-lalgorithme-du-gradient"
+id="toc-résultats-de-lalgorithme-du-gradient">Résultats de l’algorithme
+du gradient</a></li>
+</ul></li>
+<li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
 </ul>
 </nav>
 <h1 id="introduction">Introduction</h1>
-<p>On souhaite déterminer les flux de chaleur <span
-class="math inline">R_1</span> et <span class="math inline">R_2</span>
-et d’air <span class="math inline">v</span> pour obtenir une température
-moyenne de 19°C</p>
+<p>Dans ce projet, on souhaite déterminer les flux de chaleur <span
+class="math inline">R_1</span> (<span class="math inline">\phi
+_{R_1}</span>) et <span class="math inline">R_2</span> (<span
+class="math inline">\phi _{R_2}</span>) et d’air <span
+class="math inline">v</span> (<span class="math inline">\phi _0</span>)
+pour obtenir une température moyenne de 19°C dans la pièce.</p>
+<p>Dans un premier temps, on modélise le problème par des équations aux
+dérivées partielles qu’on va resoudre à l’aide de la méthode des
+élements finis.</p>
+<p>Dans un second temps, on utilise l’algorithme de descente du gradient
+pour trouver les flux de chaleurs optimaux. On s’interessera
+particulièrement à trois méthodes de calcul du gradient qui sont:</p>
+<ul>
+<li>L’approche par différences finies</li>
+<li>La méthode de l’équation de sensibilité</li>
+<li>La méthode de l’équation adjointe</li>
+</ul>
 <h1 id="modélisation">Modélisation</h1>
 <h2 id="aérodynamique">Aérodynamique</h2>
+<h3 id="champ-de-vitesse">Champ de vitesse</h3>
 <ul>
 <li>On suppose que le champ de vitesse dérive d’un potentiel :</li>
 </ul>
 <p>la vitesse est donc donnée par:</p>
-<p><span class="math display">\overrightarrow U(x,y) =
-\overrightarrow{grad} \phi(x,y) = \nabla \phi(x,y)</span></p>
+<p><span class="math display">\begin{align}
+\overrightarrow U(x,y) = \overrightarrow{grad} \phi(x,y) = \nabla
+\phi(x,y)
+\end{align}</span></p>
 <ul>
 <li>On suppose que l’écoulement est incompressible:</li>
 </ul>
-<p><span class="math display">div(\overrightarrow{U}) = 0</span></p>
-<p>Ces deux équations nous emmène à l’équation suivante :</p>
-<p><span class="math display"> \Delta \phi = 0  \text{  sur  }
-(\Omega)</span></p>
+<p><span class="math display">\begin{align}
+div(\overrightarrow{U}) = 0
+\end{align}</span></p>
+<p>Les équations (1) et (2) donnent :</p>
+<p><span class="math display">\begin{align}
+\Delta \phi = 0  \text{  sur  } (\Omega)
+\end{align}</span></p>
+<h3 id="conditions-aux-limites">Conditions aux limites:</h3>
 <ul>
-<li><p>Conditions aux limites:</p>
-<ul>
-<li><p>Mûr + radiateurs glissants + fenêtre: <span
+<li><p>Mur + radiateurs glissants + fenêtre: <span
 class="math inline">\overrightarrow U . \overrightarrow n = 0 \text{ sur
-} (\Gamma _R \Gamma _ W \Gamma _F )</span> où <span
-class="math inline">\Gamma _F = \Gamma _{F_N} \Gamma _{F_S}</span></p>
+} (\Gamma _R \cup \Gamma _ W \cup \Gamma _F )</span> où <span
+class="math inline">\Gamma _F = \Gamma _{F_N} \cup \Gamma
+_{F_S}</span></p>
 <p>Donc <span class="math display"> \overrightarrow{\nabla \phi} .
 \overrightarrow n  = 0</span></p></li>
 <li><p>Flux sortant controlé : <span class="math inline">\overrightarrow
@@ -233,11 +289,407 @@ U . \overrightarrow n = \phi _0</span></p>
 \overrightarrow n  = \phi _0 \text{ sur } (\Gamma _0)</span></p></li>
 <li><p>Potentiel fixé entré : <span class="math inline">\phi = \phi _i
 \text{ sur } (\Gamma _V)</span></p></li>
-</ul></li>
 </ul>
 <h2 id="thermique">Thermique</h2>
+<h3 id="champ-de-température">Champ de température</h3>
+<p>On prend en compte les effets de convection et de diffusion:</p>
+<p><span class="math display">
+\underbrace{\overrightarrow{U}.\overrightarrow{\nabla T}}_{Convection} =
+\underbrace{\mu \Delta T }_{diffusion} </span></p>
 <ul>
-<li>On prend en compte les effets de convection et de diffusion:</li>
+<li><p><span class="math inline">T(x,y)</span> : champ de
+température</p></li>
+<li><p><span class="math inline">\mu</span> : coefficient de
+diffusion</p></li>
 </ul>
+<h3 id="conditions-aux-limites-1">Conditions aux limites :</h3>
+<ul>
+<li><p>Murs isolants: <span class="math inline">\overrightarrow{\nabla
+T}.\overrightarrow{n} = 0 \text{ sur } (\Gamma _W)</span></p></li>
+<li><p>Température fixée aux fenêtres : <span class="math inline">T =
+T_{F_N}</span>, <span class="math inline">T = T_{F_S}</span></p></li>
+<li><p>Pas de flux sur la ventilation : <span
+class="math inline">\overrightarrow{\nabla T}.\overrightarrow{n} = 0
+\text{ sur } (\Gamma _V)</span></p></li>
+<li><p>flux controlé sur les radiateurs :</p></li>
+</ul>
+<p><span class="math display"> \overrightarrow{\nabla
+T}.\overrightarrow{n} = \phi _{R_1} \text{ sur } (\Gamma _{R_1})
+</span></p>
+<p><span class="math display"> \overrightarrow{\nabla
+T}.\overrightarrow{n} = \phi _{R_2} \text{ sur } (\Gamma _{R_2})
+</span></p>
+<h1 id="resolution-numérique">Resolution numérique</h1>
+<p>Dans cette partie, on se propose de resoudre les équations ci-dessus
+avec la méthode des élements finis.</p>
+<p>Pour cela on va trouver la formulation variationnelle des
+équations.</p>
+<p>On cherche <span class="math inline">\phi</span> vérifiant: <span
+class="math inline">\int_{(\Omega)} \Delta \phi v d \Omega = 0 \text{ }
+\forall v</span></p>
+<p>On réalise une intégration par parties (IPP):</p>
+<p><span class="math display"> - \int_{(\Omega)} \overrightarrow{\nabla
+T}.\overrightarrow{\nabla v} d \Omega + \int_{(\Gamma)}
+\overrightarrow{\nabla T}.\overrightarrow{n} v d \Gamma = 0 </span></p>
+<p>On cherche <span class="math inline">\phi \in H_{\Gamma _i}^1</span>
+tel que:</p>
+<p><span class="math display"> - \int_{(\Omega)} \overrightarrow{\nabla
+T}.\overrightarrow{\nabla v} d \Omega + \int_{(\Gamma _i)} \phi _i v d
+\Gamma = 0 \text{ } \forall v \in H_{\Gamma _i}^1 </span></p>
+<p>On cherche <span class="math inline">T</span> vérifiant:</p>
+<p><span class="math display"> \int_{(\Omega)}
+[\overrightarrow{U}.\overrightarrow{\nabla T} - \mu \Delta T] v d
+\Omega  = 0 </span></p>
+<p>On réalise une IPP comme pour l’équation précédente et on
+obtient:</p>
+<p><span class="math display"> \int_{(\Omega)}
+[\overrightarrow{U}.\overrightarrow{\nabla T} + \mu
+\overrightarrow{\Delta T}.\overrightarrow{\Delta v}] d \Omega  -
+\int_{\Gamma} \mu \overrightarrow{\nabla T}. \overrightarrow{n} v d
+\Gamma = 0  \text{ } \forall v</span></p>
+<p>On cherche <span class="math inline">T \in H_{\Gamma _i}^1</span> tel
+que:</p>
+<p><span class="math display"> \int_{(\Omega)}
+[\overrightarrow{U}.\overrightarrow{\nabla T} + \mu
+\overrightarrow{\Delta T}.\overrightarrow{\Delta v}] d \Omega  -
+\int_{\Gamma _{R_1} \cup \Gamma _{R_2}} \mu  \phi _R v d \Gamma =
+0  \text{ } \forall v \in H_{\Gamma _{F}}^1 </span></p>
+<p>On utilise <code>FreeFem++</code> pour resoudre ces équations. Puis
+on va utiliser les resultats pour resoudre notre problème d’optimisation
+qui va consister à minimiser la fonction coût suivante:</p>
+<p><span class="math display"> J = \frac{1}{2} \int_{\Omega} (T(x,y) -
+T^{*})^2 d \Omega</span></p>
+<p><span class="math inline">T^{*} = \text{19°C}</span> : Température
+cible</p>
+<h1 id="optimisation">Optimisation</h1>
+<p>On va utiliser l’algorithme de descente du gradient. nous nous
+intéressons donc à trois méthodes de calcul du gradients. Avant
+d’arriver à ces méthodes, expliquons un peu le principe générale de cet
+algorithme.</p>
+<h2 id="algorithme-de-descente-du-gradient">Algorithme de descente du
+gradient</h2>
+<p>Soit une fonction <span class="math inline">f: \mathbb{R}^n \to
+\mathbb{R}</span>, <span class="math inline">P \mapsto f(P)</span> avec
+<span class="math inline">P = (a_1, \cdots a_n)</span> dont on sait
+calculer le gradient <span class="math inline">grad f(P)</span>.</p>
+<p>L’algorithme du gradient est donnée par:</p>
+<p><strong>Données</strong> - Un point initial <span
+class="math inline">P_0 \in \mathbb{R}</span> - un niveau d’erreur <span
+class="math inline">\epsilon &gt; 0</span></p>
+<p><strong>Itération</strong></p>
+<p>On calcule une suite de points <span class="math inline">P_1, P_2,
+\cdots \in \mathbb{R}^n</span> par récurrence de la façon suivante.
+Supposons que l’on ait déjà obtenu le point <span
+class="math inline">P_k</span> :</p>
+<ul>
+<li>On calcul <span class="math inline">grad f(P_k)</span>,</li>
+<li>On choisit un pas <span class="math inline">\delta</span> (appelé
+learning rate dans le monde de l’apprentissage automatique) et on
+calcule</li>
+</ul>
+<p><span class="math display"> P_{k+1} = P_k - \delta grad f(P_k)
+</span></p>
+<p><strong>Arrêt</strong></p>
+<p>On s’arrête lorsque <span class="math inline">\|(grad f(P_k)) \|\leq
+\epsilon</span>.</p>
+<p>On peut aussi choisir un nombre d’itérations (epochs dans
+l’apprentissage automatique).</p>
+<p>Cette méthode depend du calcul du gradient de la fonction qu’on
+cherche à minimiser. Intéressons nous donc à trois méthodes de calcul de
+ce gradient.</p>
+<h2 id="approche-par-différences-finies">Approche par différences
+finies</h2>
+<p>Soit <span class="math inline">\alpha</span> le paramètre à
+optimiser: <span class="math inline">\alpha \in \mathbb{R}</span></p>
+<p>Dans notre cas <span class="math inline">\alpha</span> peut-être
+<span class="math inline">\phi _0</span>, <span class="math inline">\phi
+_{R_1}</span> et <span class="math inline">\phi _{R_2}</span></p>
+<p><span class="math inline">T(\alpha)</span> : solution de l’EDP
+(trouvé par la méthode des élements finis)</p>
+<p>On note <span class="math inline">f(\alpha) = J(T(\alpha))</span> :
+fonctionnelle coût</p>
+<p><strong>1er ordre</strong></p>
+<p><span class="math display"> \frac{df}{d \alpha} = \frac{f(\alpha +
+\delta \alpha) - f(\alpha)}{\delta \alpha}  + O(\delta \alpha) =
+\frac{J(T(\alpha + \delta \alpha)) - J(T(\alpha))}{\delta \alpha} +
+O(\delta \alpha)</span></p>
+<p><strong>2e ordre</strong></p>
+<p><span class="math display"> \frac{f(\alpha + \delta \alpha) -
+f(\alpha - \delta \alpha)}{2 \delta \alpha} + O(\delta \alpha ^2) =
+\frac{j(T(\alpha + \delta \alpha)) - j(T(\alpha - \delta \alpha))}{2
+\delta \alpha} + O(\delta \alpha ^2)</span></p>
+<p>Cette méthode est simple à mettre en oeuvre mais elle présente
+quelques inconvénients:</p>
+<ul>
+<li><p>Précision : erreur de troncature pour <span
+class="math inline">\delta \alpha</span> grand et erreur d’arrondi pour
+<span class="math inline">\delta \alpha</span> petit</p></li>
+<li><p>Coût CPU croît linéairement avec le nombre de paramètres
+n</p></li>
+<li><p>Il faut faire un choix à priori de <span
+class="math inline">\delta \alpha</span></p></li>
+</ul>
+<p>Vu tous les inconvenients de cette méthode, en général on
+l’évite.</p>
+<h2 id="méthode-de-léquation-de-sensibilité">Méthode de l’équation de
+sensibilité</h2>
+<p>On va s’intéresser dans ce rapport seulement à l’approche continue de
+cette méthode.</p>
+<p>L’idée est de propager une pertubation du paramètre <span
+class="math inline">\alpha</span> en différentiant les EDP les unes
+après les autres.</p>
+<p>Illustrons cette méthode dans le cas <span class="math inline">\alpha
+= \phi _0</span></p>
+<ul>
+<li>Equation du potentiel:</li>
+</ul>
+<p><span class="math display"> \int_{\Omega} \nabla
+\overrightarrow{\phi}. \nabla \overrightarrow{v} d \Omega + \int_{\Gamma
+_ 0} \phi _0 v d \Gamma = 0 \text{ } \forall v \in H_{\Gamma
+_i}^1</span></p>
+<p>En dérivant formellemnt par rapport à <span
+class="math inline">\alpha</span> et en notant <span
+class="math inline">\phi _ {\alpha} = \frac{\partial \phi}{\partial
+\alpha}</span>, on obtient:</p>
+<p><span class="math display"> \int_{\Omega} \nabla \overrightarrow{\phi
+_{\alpha}}. \nabla \overrightarrow{v} d \Omega + \int_{\Gamma _ 0}  v d
+\Gamma = 0 \text{ } \forall v \in H_{\Gamma _i}^1</span></p>
+<ul>
+<li>Equation vitesse: <span class="math inline">\overrightarrow{U} =
+\nabla \overrightarrow{\phi}</span></li>
+</ul>
+<p>On dérive par rapport à <span class="math inline">\alpha</span> et on
+obtient en notant <span class="math inline">\overrightarrow{U_{alpha}} =
+\frac{\partial \overrightarrow{U}}{\partial \alpha}</span>:</p>
+<p><span class="math display"> \overrightarrow{U}_{alpha} = \nabla
+\overrightarrow{\phi}_{\alpha} </span></p>
+<ul>
+<li>Equation de transport de la chaleur:</li>
+</ul>
+<p><span class="math display"> \int_{(\Omega)}
+[\overrightarrow{U}.\overrightarrow{\nabla T} + \mu
+\overrightarrow{\Delta T}.\overrightarrow{\Delta v}] d \Omega  -
+\int_{\Gamma _{R}} \mu  \phi _R v d \Gamma = 0  \text{ } \forall v \in
+H_{\Gamma _{F}}^1 </span></p>
+<p>On dérive par rapport à <span class="math inline">\alpha</span> et on
+obtient en notant <span class="math inline">T_{\alpha} = \frac{\partial
+\overrightarrow{T}}{\partial \alpha}</span>:</p>
+<p><span class="math display"> \int_{(\Omega)}
+[\overrightarrow{U}.\overrightarrow{\nabla T_{\alpha}} + \mu
+\overrightarrow{\Delta T_{\alpha}}.\overrightarrow{\Delta v}] d
+\Omega  = 0  \text{ } \forall v \in H_{\Gamma _{F}}^1 </span></p>
+<ul>
+<li>Fonction coût: <span class="math inline">J = \frac{1}{2}
+\int_{\Omega} (T - T^{*})^2 d \Omega</span></li>
+</ul>
+<p>On dérive par rapport à <span class="math inline">\alpha</span> et on
+obtient:</p>
+<p><span class="math display">\frac{\partial J}{\partial \alpha} =
+\int_{\Omega} (T - T^{*}) T_{\alpha} d \Omega</span></p>
+<h2 id="méthode-de-léquation-adjointe">Méthode de l’équation
+adjointe</h2>
+<p>Contrairement à l’approche précédente, on part de la fonction
+coût:</p>
+<p><span class="math display"> J = \frac{1}{2} \int_{\Omega} (T -
+T^{*})^2 d \Omega </span></p>
+<p>On lui ajoute les formulations variationnelles des équations, puis on
+dérive par rapport à <span class="math inline">\alpha</span> en
+notant:</p>
+<ul>
+<li><span class="math inline">T_{\alpha} = \frac{\partial T}{\partial
+\alpha}</span></li>
+<li><span class="math inline">\phi _{\alpha} = \frac{\partial
+\phi}{\partial \alpha}</span></li>
+<li><span class="math inline">\phi _0 &#39; = \frac{\partial \phi
+_0}{\partial \alpha}</span></li>
+<li><span class="math inline">\phi _R &#39; = \frac{\partial \phi
+_R}{\partial \alpha}</span></li>
+<li><span class="math inline">J = \frac{\partial J}{\partial
+\alpha}</span></li>
+</ul>
+<p>on obtient:</p>
+<p><span class="math display">\begin{align*}
+J&#39;= \int_{\Omega} (T - T^{*}) T_{\alpha} d \Omega \\
++ \int_{\Omega} \nabla \overrightarrow{\phi _{\alpha}}. \nabla
+\overrightarrow{v_1} d\Omega - \int_{\Gamma _0} \phi _0 &#39; v_1
+d\Gamma \\
++ \int_{\Omega} [ \nabla \overrightarrow{\phi _{\alpha}}. \nabla
+\overrightarrow{T} v_2  + \nabla \overrightarrow{\phi} . \nabla
+\overrightarrow{T_{\alpha}} v_2 + \mu \nabla \overrightarrow{T
+_{\alpha}} . \nabla \overrightarrow{v_2} ] d\Omega - \int_{\Gamma _R}
+\mu \phi _R &#39; v_2 d\Gamma  \text{  } \forall v_1, v_2 \in H_{\Gamma
+_i}^1
+\end{align*}</span></p>
+<p>On choisit <span class="math inline">v_1</span> et <span
+class="math inline">v_2</span> pour annuler les termes de sensibilités
+<span class="math inline">T_{\alpha}</span> et <span
+class="math inline">\phi _{\alpha}</span> et on obtient:</p>
+<p>soit <span class="math inline">\lambda _2 \in H_{\Gamma _F}^1</span>,
+tel que:</p>
+<p><span class="math display"> \int_{\Omega} (T - T^{*})w_2 d\Omega +
+\int_{\Omega} \nabla \overrightarrow{\phi}. \nabla \overrightarrow{w_2}
+\lambda _2 + \mu \nabla \overrightarrow{w_2}. \nabla
+\overrightarrow{\lambda _2} d\Omega = 0  \text{ } \forall w_2 \in
+H_{\Gamma _F}^1 </span></p>
+<p>soit <span class="math inline">\lambda _1 \in H_{\Gamma _i}^1</span>,
+tel que:</p>
+<p><span class="math display"> \int_{\Omega} \nabla
+\overrightarrow{w_1}. \nabla \overrightarrow{\lambda _1} d\Omega +
+\int_{\Omega} \nabla \overrightarrow{w_1}. \nabla \overrightarrow{T}
+\lambda _2 d\Omega = 0  \text{ } \forall w_2 \in H_{\Gamma _i}^1
+</span></p>
+<p><span class="math inline">\lambda _1</span> et <span
+class="math inline">\lambda _2</span> sont appelées variables
+adjointes.</p>
+<p>Apreès avoir resolu les équations adjointes et fixé <span
+class="math inline">\lambda _1</span> et <span
+class="math inline">\lambda _2</span>, on a:</p>
+<p><span class="math display"> J&#39; = - \int_{\Gamma _0} \phi _0 &#39;
+\lambda _1 d\Gamma - \int_{\Gamma _R} \mu \phi _R &#39; \lambda _2
+d\Gamma </span></p>
+<h1 id="résultats">Résultats</h1>
+<h2 id="calculs-des-gradients">Calculs des gradients</h2>
+<p>Comme la méthode par différences finies a un coût CPU élevé, nous
+allons montrer les resultats de calculs de gradient seulement pur les
+méthodes de sensibilité et adjointes.</p>
+<p>On implémente ces méthodes à l’aide <code>FreeFem++</code> et on
+obtient:</p>
+<p>Pour la méthode de sensibilité, voir figure 1</p>
+<figure>
+<img src="gradientSensi.png"
+alt="Calcul de gradient de la fonction coût par la méthode de sensiblité" />
+<figcaption aria-hidden="true">Calcul de gradient de la fonction coût
+par la méthode de sensiblité</figcaption>
+</figure>
+<p>Pour la méthode de l’équation adjointe, voir figure 2</p>
+<figure>
+<img src="gradientAdjoint.png"
+alt="Calcul du gradient de la fonction coût par la méthode de l’équation adjointe" />
+<figcaption aria-hidden="true">Calcul du gradient de la fonction coût
+par la méthode de l’équation adjointe</figcaption>
+</figure>
+<p>On obtient de valeurs de gradients sensiblement égales.</p>
+<p>Intéressons nous maintenant à l’algorithme de descente du
+gradient.</p>
+<h2 id="résultats-de-lalgorithme-du-gradient">Résultats de l’algorithme
+du gradient</h2>
+<p>Dans cette partie on va s’intéresser aux résultats obtenus en
+appliquant l’algorithme du gradient pour l’optimisation (ici
+minimisation) de notre fonction coût.</p>
+<p>On pourra voir l’effet des paramètres suivants sur
+l’optimisation:</p>
+<ul>
+<li>Le pas (ou encore taux d’apprentissage)</li>
+<li>Le nombre d’itération (ou nombre d’epochs)</li>
+<li>Le calcul du gradient (adjoint ou sensibilité)</li>
+<li>Le point initial</li>
+</ul>
+<p>On commence avec l’algorithme du gradient avec les paramètres
+suivant:</p>
+<ul>
+<li>le pas <span class="math inline">\delta = 1</span></li>
+<li>epochs = 80</li>
+<li>point initial (<span class="math inline">\phi _0 = 0.5</span>, <span
+class="math inline">\phi _{R_1} = 12</span>, <span
+class="math inline">\phi _{R_2} = 8</span>)</li>
+<li>gradient calculé avec la méthode de l’équation adjointe</li>
+</ul>
+<p>On obtient:</p>
+<ul>
+<li>fonction coût optimale: 74.7319465038974</li>
+</ul>
+<p>flux de chaleur optimaux :</p>
+<ul>
+<li><span class="math inline">\phi_ 0^{*} =
+-0.699749866676842</span></li>
+<li><span class="math inline">\phi_ {R_1}^{*} =
+11.4876338357527</span></li>
+<li><span class="math inline">\phi_ {R_2}^{*} =
+11.1506055433064</span></li>
+</ul>
+<figure>
+<img src="tempopti1.png"
+alt="configuration des flux de chaleur dans la pièce pour obtenir une température moyenne proche de 19°C" />
+<figcaption aria-hidden="true">configuration des flux de chaleur dans la
+pièce pour obtenir une température moyenne proche de 19°C</figcaption>
+</figure>
+<p>La figure 3 nous donne la configuration pour avoir une température
+moyenne à 19°C dans la pièce.</p>
+<p>En modifiant le pas <span class="math inline">\delta = 0.1</span> au
+lieu de <span class="math inline">\delta = 1</span>, on obtient à peu
+près les mêmes résultats avec une fonction coût optimale à
+75.4629008889292</p>
+<p>Augmentons le nombre d’itération (nombre d’epochs) epochs = 100 au
+lieu de epochs = 80 (on garde <span class="math inline">\delta =
+1</span> et les valeurs initiales restent les mêmes), on obtient une
+fonction coût optimale à 74.6591909692114 avec à peu près les mêmes
+résultats pour les flux de chaleurs optimaux.</p>
+<p>Changeons maintenant les valeurs initiales, on va partir de <span
+class="math inline">\phi _0 = 0</span>, <span class="math inline">\phi
+_{R_1} = 0</span>, <span class="math inline">\phi _{R_2} = 0</span> et
+on garde epochs = 100, <span class="math inline">\delta = 1</span>, on
+obtient:</p>
+<ul>
+<li>fonction coût optimale: 75.892136499522</li>
+</ul>
+<p>flux de chaleur optimaux :</p>
+<ul>
+<li><span class="math inline">\phi_ 0^{*} =
+-0.665789519286456</span></li>
+<li><span class="math inline">\phi_ {R_1}^{*} =
+8.73011116098717</span></li>
+<li><span class="math inline">\phi_ {R_2}^{*} =
+11.8940297830694</span></li>
+</ul>
+<p>Voyons maintenant l’impact de la méthode de calcul du gradient sur
+les resultats</p>
+<p>On garde les paramètres suivants:</p>
+<ul>
+<li>le pas <span class="math inline">\delta = 1</span></li>
+<li>epochs = 80</li>
+<li>point initial (<span class="math inline">\phi _0 = 0.5</span>, <span
+class="math inline">\phi _{R_1} = 12</span>, <span
+class="math inline">\phi _{R_2} = 8</span>)</li>
+</ul>
+<p>et on utilise la méthode de l’équation de sensibilité pour calculer
+le gradient de la fonction coût, on obtient les resultats suivants:</p>
+<ul>
+<li>fonction coût optimale: 222.764749308778</li>
+</ul>
+<p>flux de chaleur optimaux :</p>
+<ul>
+<li><span class="math inline">\phi_ 0^{*} =
+-3.89692438401261</span></li>
+<li><span class="math inline">\phi_ {R_1}^{*} =
+12.1158834230565</span></li>
+<li><span class="math inline">\phi_ {R_2}^{*} =
+8.11684177772155</span></li>
+</ul>
+<p>La fonction coût optimale est moins bonne qu’avec l’autre méthode de
+calcul du gradient.</p>
+<p>La figure 4 nous donne la configuration pour avoir une température
+moyenne à 19°C dans la pièce lorsqu’on a utilisé la méthode de
+l’équation de sensibilité pour le calcul du gradient.</p>
+<figure>
+<img src="tempopti2.png"
+alt="configuration pour avoir une température moyenne à 19°C dans la pièce (méthode de l’équation de sensibilité utilisée pour le calcul du gradient)" />
+<figcaption aria-hidden="true">configuration pour avoir une température
+moyenne à 19°C dans la pièce (méthode de l’équation de sensibilité
+utilisée pour le calcul du gradient)</figcaption>
+</figure>
+<p>Le calcul du gradient avec la méthode de l’équation de sensibilité
+semble donner de moins bons resultats par rapport au calcul avec la
+méthode de l’équation adjointe.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Dans ce rapport, nous avons résolu un problème simple d’optimisation
+couplée à une étude thermique et une étude dynamique. On a pu voir que
+l’algorithme de descente du gradient peut aider dans la phase
+d’optimisation mais il faut faire attention à la méthode de calcul du
+gradient de la fonction coût et à d’autres paramètres comme le pas <span
+class="math inline">\delta</span> (learning rate en Machine Learning) et
+le nombre d’itération qui peuvent avoir un impact sur la qualité des
+résultats de l’optimisation. On pourra par la suite utiliser d’autres
+algorithmes d’optimisation pour voir s’ils apportent des
+améliorations.</p>
 </body>
 </html>
